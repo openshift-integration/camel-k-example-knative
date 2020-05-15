@@ -1,9 +1,13 @@
+package algorithms;
+
 import org.apache.camel.BindToRegistry;
+import org.apache.camel.PropertyInject;
 
 @BindToRegistry("algorithm")
 public class SimpleAlgorithm {
 
-  private static final double VARIATION = 0.0001;
+  @PropertyInject(value="algorithm.sensitivity", defaultValue = "0.0001")
+  private double sensitivity;
 
   private Double previous;
   
@@ -11,9 +15,9 @@ public class SimpleAlgorithm {
     Double reference = previous;
     this.previous = value;
 
-    if (reference != null && value < reference * (1-VARIATION)) {
+    if (reference != null && value < reference * (1 - sensitivity)) {
       return new Action("buy", value);
-    } else if (reference != null && value > reference * (1+VARIATION)) {
+    } else if (reference != null && value > reference * (1 + sensitivity)) {
       return new Action("sell", value);
     }
     return null;

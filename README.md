@@ -1,1 +1,0 @@
-# camel-k-example-knative

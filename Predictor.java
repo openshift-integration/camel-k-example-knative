@@ -1,4 +1,4 @@
-// camel-k: language=java trait=knative-service.min-scale=1 trait=knative-service.max-scale=1 source=SimpleAlgorithm.java
+// camel-k: language=java
 
 import org.apache.camel.builder.RouteBuilder;
 
@@ -11,7 +11,7 @@ public class Predictor extends RouteBuilder {
         .unmarshal().json()
         .transform().simple("${body[last]}")
         .log("Latest value for BTC/USDT is: ${body}")
-        .to("seda:evaluate")
+        .to("seda:evaluate?waitForTaskToComplete=Never")
         .setBody().constant("");
 
       from("seda:evaluate")
@@ -24,7 +24,8 @@ public class Predictor extends RouteBuilder {
       from("direct:publish")
         .marshal().json()
         .removeHeaders("*")
-        .to("knative:event/prediction.btc.usdt");
+        .setHeader("CE-Type", constant("predictor.{{predictor.name}}"))
+        .to("knative:event/predictor");
 
   }
 
