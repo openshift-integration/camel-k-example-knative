@@ -151,13 +151,12 @@ that Camel K integrations will use to publish events or subscribe to it in order
 types are available. Subscribers of the eventing broker are Knative serving services, that can scale down to zero when no
 events are available for them.
 
-To enable the eventing broker, we create a `default` broker in the current namespace using the ([knative-broker.yaml](didact://?commandId=vscode.open&projectFilePath=knative-broker.yaml "Opens the Broker configuration"){.didact}) definition:
-
+To enable the eventing broker, we create a `default` broker in the current namespace using namespace labeling:
 
 ```
-oc apply -f knative-broker.yaml
+oc label namespace camel-knative knative-eventing-injection=enabled
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$oc%20apply%20-f%20knative-broker.yaml&completion=Created%20Knative%20Broker. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$oc%20label%20namespace%20camel-knative%20knative-eventing-injection%3Denabled&completion=Created%20Knative%20Broker. "Opens a new terminal and sends the command above"){.didact})
 
 ## 3. Push Bitcoin market data to the mesh
 

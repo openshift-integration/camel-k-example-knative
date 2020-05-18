@@ -5,8 +5,11 @@ pre:
 - name: integrations
   run: |
     cd ..
-
+    
     kamel install -w -n ${YAKS_NAMESPACE}
+
+    ## Install Knative Broker
+    oc label namespace ${YAKS_NAMESPACE} knative-eventing-injection=enabled
     
     ## Mock generator
     kamel run test/MarketSourceMock.java -w -n ${YAKS_NAMESPACE}
@@ -17,5 +20,5 @@ pre:
     
     # Subscribers
     kamel run SillyInvestor.java -w -n ${YAKS_NAMESPACE}
-    kamel run CautiousInvestorService.java -w -n ${YAKS_NAMESPACE}
     kamel run CautiousInvestorAdapterSink.java -w -n ${YAKS_NAMESPACE}
+    kamel run CautiousInvestorService.java -w -n ${YAKS_NAMESPACE}
