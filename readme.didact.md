@@ -1,7 +1,7 @@
 # Camel K Knative Example
 
 This example demonstrates the idiomatic way of using Camel K in Knative for building event-driven applications. It leverages the Knative eventing broker as 
-the central point for making various services to communicate via event pub/sub. It also shows how Camel K can be used for connecting the Knative event mesh with external systems, with integrations that can play the roles of "event source" or "event sink".
+the central point that lets various services communicate via event pub/sub. It also shows how Camel K can be used for connecting the Knative event mesh with external systems, with integrations that can play the roles of "event source" or "event sink".
 
 ## Scenario
 
@@ -302,14 +302,14 @@ oc get pod
 ```
 ([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$oc%20get%20pod&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
-At the end of the process, **only the Camel K operator will be running**.
+At the end of the process, **no user pods will be running**.
 
 To simulate now a reactivation of the market in the morning, you can create again the `market-source`:
 
 ```
 kamel run MarketSource.java
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20MarketSource.java%20--logs&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20MarketSource.java&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 
 Pods now will start again to run, one after the other, as soon as they are needed:
