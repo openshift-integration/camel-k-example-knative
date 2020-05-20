@@ -1,5 +1,8 @@
 package algorithms;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.camel.BindToRegistry;
 import org.apache.camel.PropertyInject;
 
@@ -11,40 +14,22 @@ public class SimpleAlgorithm {
 
   private Double previous;
   
-  public Action predict(double value) {
+  public Map<String, Object> predict(double value) {
     Double reference = previous;
     this.previous = value;
 
     if (reference != null && value < reference * (1 - sensitivity)) {
-      return new Action("buy", value);
+      Map<String, Object> res = new HashMap<>();
+      res.put("value", value);
+      res.put("operation", "buy");
+      return res;
     } else if (reference != null && value > reference * (1 + sensitivity)) {
-      return new Action("sell", value);
+      Map<String, Object> res = new HashMap<>();
+      res.put("value", value);
+      res.put("operation", "sell");
+      return res;
     }
     return null;
-  }
-
-  static class Action {
-    private String operation;
-    private double value;
-
-    public Action(String operation, double value) {
-      this.operation = operation;
-      this.value = value;
-    }
-
-    public String getOperation() {
-      return operation;
-    }
-
-    public double getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return this.operation + " at " + this.value;
-    }
-
   }
 
 }
