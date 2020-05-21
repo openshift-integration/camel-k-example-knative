@@ -1,5 +1,8 @@
 package test;
 
+import java.util.Collections;
+import java.util.Map;
+
 // camel-k: language=java
 
 import org.apache.camel.builder.RouteBuilder;
@@ -18,12 +21,12 @@ public class MarketSourceMock extends RouteBuilder {
 
   private int counter;
 
-  public MockData generate() {
+  public Map<String,Double> generate() {
     boolean high = (this.counter++) % 2 == 0;
     if (high) {
-      return new MockData(20.0);
+      return Collections.singletonMap("last",20.0);
     }
-    return new MockData(10.0);
+    return Collections.singletonMap("last",10.0);
   }
 
   static class MockData {
