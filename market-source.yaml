@@ -1,0 +1,12 @@
+# camel-k: language=yaml
+
+- from:
+    uri: "timer:update"
+    parameters:
+      period: 10000
+    steps:
+    - to: "xchange:binance?service=marketdata&method=ticker&currencyPair=BTC/USDT"
+    - marshal:
+        json: {}
+    - log: "Sending BTC/USDT data to the broker: ${body}"
+    - to: "knative:event/market.btc.usdt"
