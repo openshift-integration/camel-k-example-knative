@@ -160,14 +160,14 @@ oc label namespace camel-knative knative-eventing-injection=enabled
 
 ## 3. Push Bitcoin market data to the mesh
 
-We'll create a ([MarketSource.java](didact://?commandId=vscode.open&projectFilePath=MarketSource.java "Opens the file"){.didact}) integration
+We'll create a ([market-source.yaml](didact://?commandId=vscode.open&projectFilePath=market-source.yaml "Opens the file"){.didact}) integration, using Camel **YAML DSL**,
 with the role of taking live data from the Bitcoin market and pushing it to the event mesh, using the `market.btc.usdt` event type:
 
 
 ```
-kamel run MarketSource.java --logs
+kamel run market-source.yaml -d camel-jackson --logs
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20MarketSource.java%20--logs&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20market-source.yaml%20-d%20camel-jackson%20--logs&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 The command above will run the integration and wait for it to run, then it will show the logs in the console.
 
@@ -307,9 +307,9 @@ At the end of the process, **no user pods will be running**.
 To simulate now a reactivation of the market in the morning, you can create again the `market-source`:
 
 ```
-kamel run MarketSource.java
+kamel run market-source.yaml -d camel-jackson
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20MarketSource.java&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20market-source.yaml%20-d%20camel-jackson&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 
 Pods now will start again to run, one after the other, as soon as they are needed:
