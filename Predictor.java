@@ -25,7 +25,7 @@ public class Predictor extends RouteBuilder {
         .marshal().json()
         .removeHeaders("*")
         .setHeader("CE-Type", constant("predictor.{{predictor.name}}"))
-        .to("knative:event/predictor");
+        .to("knative:event");
 
   }
 
