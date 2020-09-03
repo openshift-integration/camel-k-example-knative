@@ -9,6 +9,8 @@ pre:
     kamel install -w -n ${YAKS_NAMESPACE}
 
     ## Install Knative Broker
+    # TODO: replace with following when updating CI
+    # kn broker create default -n ${YAKS_NAMESPACE}
     oc label namespace ${YAKS_NAMESPACE} knative-eventing-injection=enabled
     
     ## Mock generator

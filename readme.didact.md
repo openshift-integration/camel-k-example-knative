@@ -59,6 +59,8 @@ This demo also needs OpenShift Serverless (Knative) installed and working on the
 You need to install the **OpenShift Serverless** operator from Operator Hub in your OpenShift installation, 
 then use it to install both **Knative Serving** and **Knative Eventing**.
 
+When the operator is installed, from the OpenShift Help menu ("?") at the top of the WebConsole, you can access the "Command Line Tools" page, where you can download the **"kn"** CLI, that is required for running this example. The CLI must be installed in your system path.
+
 Refer to the OpenShift Serverless operator documentation for instructions on how to completely install it on your cluster.
 
 ## Checking requirements
@@ -90,6 +92,14 @@ access all Camel K features.
 [Check if the Apache Camel K CLI ("kamel") is installed](didact://?commandId=vscode.didact.requirementCheck&text=kamel-requirements-status$$kamel%20version$$Camel%20K%20Client&completion=Apache%20Camel%20K%20CLI%20is%20available%20on%20this%20system. "Tests to see if `kamel version` returns a result"){.didact}
 
 *Status: unknown*{#kamel-requirements-status}
+
+**Knative CLI ("kn")**
+
+In order to have access to all Knative features, you need to install the Knative CLI ("kn").
+
+[Check if the Knative CLI ("kn") is installed](didact://?commandId=vscode.didact.requirementCheck&text=kn-requirements-status$$kn%20version$$Version&completion=Check%20if%20Knative%20CLI%20is%20available%20on%20this%20system. "Tests to see if `kn version` returns a result"){.didact}
+
+*Status: unknown*{#kn-requirements-status}
 
 **Knative installed on the OpenShift cluster**
 
@@ -151,12 +161,12 @@ that Camel K integrations will use to publish events or subscribe to it in order
 types are available. Subscribers of the eventing broker are Knative serving services, that can scale down to zero when no
 events are available for them.
 
-To enable the eventing broker, we create a `default` broker in the current namespace using namespace labeling:
+To enable the eventing broker, we create a `default` broker in the current namespace using the Knative CLI:
 
 ```
-oc label namespace camel-knative knative-eventing-injection=enabled
+kn broker create default
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$oc%20label%20namespace%20camel-knative%20knative-eventing-injection%3Denabled&completion=Created%20Knative%20Broker. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kn%20broker%20create%20default%20&completion=Created%20Knative%20Broker. "Opens a new terminal and sends the command above"){.didact})
 
 ## 3. Push Bitcoin market data to the mesh
 
