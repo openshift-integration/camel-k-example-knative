@@ -1,4 +1,5 @@
 # camel-k: language=yaml
+# camel-k: dependency=camel-quarkus-jackson
 
 - from:
     uri: "timer:update"

@@ -189,7 +189,7 @@ or hit `ctrl+c` on the terminal window. The integration will **keep running** on
 The market data feed available in the mesh can be now used to create different prediction algorithms that can publish events
 when they believe it's the right time to sell or buy bitcoins, depending on the trend of the exchange.
 
-In this example, we're going to run the *same (basic) [algorithm](didact://?commandId=vscode.open&projectFilePath=algorithms/SimpleAlgorithm.java "Opens the algorithm definition"){.didact} with different parameters*, obtaining two predictors.
+In this example, we're going to run the same (basic) algorithm with different parameters*, obtaining two predictors.
 The algorithm is basic and it's just computing if the BTC variation respect to the last observed value is higher than a threshold (expressed in percentage).
 The algorithm is bound to the event mesh via the [Predictor.java](didact://?commandId=vscode.open&projectFilePath=Predictor.java "Opens the predictor definition"){.didact} integration file.
 
@@ -199,9 +199,9 @@ will compute much more accurate predictions. Algorithms can also be developed wi
 The first predictor that we're going to run is called `simple-predictor`:
 
 ```
-kamel run --name simple-predictor -p predictor.name=simple Predictor.java algorithms/SimpleAlgorithm.java -t knative-service.max-scale=1 --logs
+kamel run --name simple-predictor -p predictor.name=simple Predictor.java -t knative-service.max-scale=1 --logs
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20--name%20simple-predictor%20-p%20predictor.name%3Dsimple%20Predictor.java%20algorithms%2FSimpleAlgorithm.java%20-t%20knative-service.max-scale%3D1%20--logs&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20--name%20simple-predictor%20-p%20predictor.name%3Dsimple%20Predictor.java%20-t%20knative-service.max-scale%3D1%20--logs&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 NOTE: we're setting the maximum number of instances of the autoscaling service to 1 because it runs a basic algorithm that does not support scaling (stores data in memory)
 
@@ -213,9 +213,9 @@ or hit `ctrl+c` on the terminal window. The integration will **keep running** on
 The second one (`better-predictor`) will be just a variation of the first, with a different threshold:
 
 ```
-kamel run --name better-predictor -p predictor.name=better -p algorithm.sensitivity=0.0005 Predictor.java algorithms/SimpleAlgorithm.java -t knative-service.max-scale=1
+kamel run --name better-predictor -p predictor.name=better -p algorithm.sensitivity=0.0005 Predictor.java -t knative-service.max-scale=1
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20--name%20better-predictor%20-p%20predictor.name%3Dbetter%20-p%20algorithm.sensitivity%3D0.0005%20Predictor.java%20algorithms%2FSimpleAlgorithm.java%20-t%20knative-service.max-scale%3D1&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20--name%20better-predictor%20-p%20predictor.name%3Dbetter%20-p%20algorithm.sensitivity%3D0.0005%20Predictor.java%20-t%20knative-service.max-scale%3D1&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 You can play with the sensitivity of the `better-predictor` to make it do prediction faster or slower and see the effects on the downstream services.
 
@@ -317,9 +317,9 @@ At the end of the process, **no user pods will be running**.
 To simulate now a reactivation of the market in the morning, you can create again the `market-source`:
 
 ```
-kamel run market-source.yaml -d camel-jackson
+kamel run market-source.yaml
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20market-source.yaml%20-d%20camel-jackson&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20market-source.yaml%20&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 
 Pods now will start again to run, one after the other, as soon as they are needed:

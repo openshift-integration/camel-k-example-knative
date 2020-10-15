@@ -17,8 +17,8 @@ pre:
     kamel run test/MarketSourceMock.java -w -n ${YAKS_NAMESPACE}
 
     ## Algorithms
-    kamel run --name simple-predictor -p predictor.name=simple Predictor.java algorithms/SimpleAlgorithm.java -t knative-service.max-scale=1 -w -n ${YAKS_NAMESPACE}
-    kamel run --name better-predictor -p predictor.name=better -p algorithm.sensitivity=0.0005 Predictor.java algorithms/SimpleAlgorithm.java -t knative-service.max-scale=1 -w -n ${YAKS_NAMESPACE}
+    kamel run --name simple-predictor -p predictor.name=simple Predictor.java -t knative-service.max-scale=1 -w -n ${YAKS_NAMESPACE}
+    kamel run --name better-predictor -p predictor.name=better -p algorithm.sensitivity=0.0005 Predictor.java -t knative-service.max-scale=1 -w -n ${YAKS_NAMESPACE}
     
     # Subscribers
     kamel run SillyInvestor.java -w -n ${YAKS_NAMESPACE}
