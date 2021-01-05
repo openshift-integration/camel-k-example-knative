@@ -11,7 +11,7 @@ pre:
     ## Install Knative Broker
     # TODO: replace with following when updating CI
     # kn broker create default -n ${YAKS_NAMESPACE}
-    oc label namespace ${YAKS_NAMESPACE} knative-eventing-injection=enabled
+    oc label namespace ${YAKS_NAMESPACE} eventing.knative.dev/injection=enabled
     
     ## Mock generator
     kamel run test/MarketSourceMock.java -w -n ${YAKS_NAMESPACE}
