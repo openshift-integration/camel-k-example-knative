@@ -8,11 +8,13 @@ public class CautiousInvestorService extends RouteBuilder {
 
       rest().post("/{currency}")
         .route()
-        .log("Asking the internal department to BUY ${header.currency}...");
+        .log("Asking the internal department to BUY ${header.currency}...")
+        .setBody(constant(""));
 
       rest().delete("/{currency}")
         .route()
-        .log("Asking the department to SELL ${header.currency}...");
+        .log("Asking the internal department to SELL ${header.currency}...")
+        .setBody(constant(""));
 
   }
 }
