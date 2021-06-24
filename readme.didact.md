@@ -175,9 +175,9 @@ with the role of taking live data from the Bitcoin market and pushing it to the 
 
 
 ```
-kamel run market-source.yaml -d camel-jackson --logs
+kamel run market-source.yaml --logs
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20market-source.yaml%20-d%20camel-jackson%20--logs&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20market-source.yaml%20--logs&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 The command above will run the integration and wait for it to run, then it will show the logs in the console.
 
