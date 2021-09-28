@@ -222,9 +222,9 @@ You can play with the sensitivity of the `better-predictor` to make it do predic
 Ensure that both predictors are running:
 
 ```
-oc get integrations
+kamel get
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$oc%20get%20integrations&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20get%20&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 You should wait also for the `better-predictor` integration to be running before proceeding.
 

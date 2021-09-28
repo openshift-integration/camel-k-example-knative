@@ -24,9 +24,9 @@ public class MarketSourceMock extends RouteBuilder {
   public Map<String,Double> generate() {
     boolean high = (this.counter++) % 2 == 0;
     if (high) {
-      return Collections.singletonMap("last",20.0);
+      return Collections.singletonMap("price",20.0);
     }
-    return Collections.singletonMap("last",10.0);
+    return Collections.singletonMap("price",10.0);
   }
 
   static class MockData {
