@@ -1,12 +1,11 @@
 // camel-k: language=java
 
-import org.apache.camel.builder.RouteBuilder;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.BindToRegistry;
 import org.apache.camel.PropertyInject;
+import org.apache.camel.builder.RouteBuilder;
 
 public class Predictor extends RouteBuilder {
 
@@ -15,7 +14,7 @@ public class Predictor extends RouteBuilder {
 
       from("knative:event/market.btc.usdt")
         .unmarshal().json()
-        .transform().simple("${body[last]}")
+        .transform().simple("${body[price]}")
         .log("Latest value for BTC/USDT is: ${body}")
         .to("seda:evaluate?waitForTaskToComplete=Never")
         .setBody().constant("");
@@ -43,7 +42,7 @@ public class Predictor extends RouteBuilder {
     private double sensitivity;
 
     private Double previous;
-    
+
     public Map<String, Object> predict(double value) {
       Double reference = previous;
       this.previous = value;
