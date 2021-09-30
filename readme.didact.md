@@ -7,7 +7,7 @@ the central point that lets various services communicate via event pub/sub. It a
 
 The example shows a simplified **trading system** that analyzes price variations of **Bitcoins** (BTC / USDT),
 using different prediction algorithms, and informs downstream services when it's time to **buy** or **sell** bitcoins (via CloudEvents).
-It uses **real data** from the bitcoin exchange market, obtained in real time via the Camel `XChange` component.
+It uses **real data** from the bitcoin exchange market, obtained in real time via the `https://www.binance.com` Http service.
 
 ![Diagram](docs/Diagram.png)
 
