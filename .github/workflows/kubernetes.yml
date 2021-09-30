@@ -34,6 +34,7 @@ jobs:
       YAKS_IMAGE_NAME: "docker.io/yaks/yaks"
       YAKS_IMAGE_VERSION: "0.6.0-202109280800"
       YAKS_RUN_OPTIONS: "--timeout=15m"
+      KUBECTL_WAIT_TIMEOUT: "180s"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -69,14 +70,6 @@ jobs:
           kubectl version
           kubectl cluster-info
           kubectl describe nodes
-      - name: Install Service Binding
-        run: |
-          echo "Installing Service Binding Operator"
-
-          export SERVICE_BINDING_VERSION=v0.8.0
-          kubectl apply -f https://github.com/redhat-developer/service-binding-operator/releases/download/$SERVICE_BINDING_VERSION/release.yaml
-          echo "Waiting for all pods to be ready in service-binding-operator"
-          kubectl wait --for=condition=Ready pod --all -n service-binding-operator --timeout=60s
       - name: Install Knative
         run: |
           # Prerequisites
@@ -112,11 +105,11 @@ jobs:
 
           # Wait for installation completed
           echo "Waiting for all pods to be ready in kourier-system"
-          kubectl wait --for=condition=Ready pod --all -n kourier-system --timeout=60s
+          kubectl wait --for=condition=Ready pod --all -n kourier-system --timeout=$KUBECTL_WAIT_TIMEOUT
           echo "Waiting for all pods to be ready in knative-serving"
-          kubectl wait --for=condition=Ready pod --all -n knative-serving --timeout=60s
+          kubectl wait --for=condition=Ready pod --all -n knative-serving --timeout=$KUBECTL_WAIT_TIMEOUT
           echo "Waiting for all pods to be ready in knative-eventing"
-          kubectl wait --for=condition=Ready pod --all -n knative-eventing --timeout=60s
+          kubectl wait --for=condition=Ready pod --all -n knative-eventing --timeout=$KUBECTL_WAIT_TIMEOUT
       - name: Camel K Tools
         uses: container-tools/camel-k-action@v1
       - name: Install Camel K
