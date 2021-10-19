@@ -21,11 +21,11 @@ on:
   pull_request:
     branches:
       - master
-      - 1.4.x
+      - 1.6.x
   push:
     branches:
       - master
-      - 1.4.x
+      - 1.6.x
 
 jobs:
   test:
