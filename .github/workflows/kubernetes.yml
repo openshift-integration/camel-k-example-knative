@@ -20,11 +20,11 @@ name: kubernetes
 on:
   pull_request:
     branches:
-      - master
+      - main
       - 1.6.x
   push:
     branches:
-      - master
+      - main
       - 1.6.x
 
 jobs:

@@ -6,4 +6,8 @@
 *.iml
 /.idea
 
+# YAKS output folders
 /_output
+
+# IDE source libraries folder
+/lib
