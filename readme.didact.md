@@ -1,5 +1,7 @@
 # Camel K Knative Example
 
+[![kubernetes](https://github.com/openshift-integration/camel-k-example-knative/actions/workflows/kubernetes.yml/badge.svg)](https://github.com/openshift-integration/camel-k-example-knative/actions/workflows/kubernetes.yml)
+
 This example demonstrates the idiomatic way of using Camel K in Knative for building event-driven applications. It leverages the Knative eventing broker as 
 the central point that lets various services communicate via event pub/sub. It also shows how Camel K can be used for connecting the Knative event mesh with external systems, with integrations that can play the roles of "event source" or "event sink".
 
@@ -7,7 +9,7 @@ the central point that lets various services communicate via event pub/sub. It a
 
 The example shows a simplified **trading system** that analyzes price variations of **Bitcoins** (BTC / USDT),
 using different prediction algorithms, and informs downstream services when it's time to **buy** or **sell** bitcoins (via CloudEvents).
-It uses **real data** from the bitcoin exchange market, obtained in real time via the Camel `XChange` component.
+It uses **real data** from the bitcoin exchange market, obtained in real time via the `https://www.binance.com` Http service.
 
 ![Diagram](docs/Diagram.png)
 
@@ -222,9 +224,9 @@ You can play with the sensitivity of the `better-predictor` to make it do predic
 Ensure that both predictors are running:
 
 ```
-oc get integrations
+kamel get
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$oc%20get%20integrations&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20get%20&completion=Executed%20command. "Opens a new terminal and sends the command above"){.didact})
 
 You should wait also for the `better-predictor` integration to be running before proceeding.
 

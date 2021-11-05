@@ -1,26 +1,15 @@
 config:
-  namespace:
-    temporary: true
-pre:
-- name: integrations
-  run: |
-    cd ..
-    
-    kamel install -w -n ${YAKS_NAMESPACE}
-
-    ## Install Knative Broker
-    # TODO: replace with following when updating CI
-    # kn broker create default -n ${YAKS_NAMESPACE}
-    oc label namespace ${YAKS_NAMESPACE} eventing.knative.dev/injection=enabled
-    
-    ## Mock generator
-    kamel run test/MarketSourceMock.java -w -n ${YAKS_NAMESPACE}
-
-    ## Algorithms
-    kamel run --name simple-predictor -p predictor.name=simple Predictor.java -t knative-service.max-scale=1 -w -n ${YAKS_NAMESPACE}
-    kamel run --name better-predictor -p predictor.name=better -p algorithm.sensitivity=0.0005 Predictor.java -t knative-service.max-scale=1 -w -n ${YAKS_NAMESPACE}
-    
-    # Subscribers
-    kamel run SillyInvestor.java -w -n ${YAKS_NAMESPACE}
-    kamel run CautiousInvestorAdapterSink.java -w -n ${YAKS_NAMESPACE}
-    kamel run CautiousInvestorService.java -w -n ${YAKS_NAMESPACE}
+  runtime:
+    env:
+      - name: YAKS_CAMELK_AUTO_REMOVE_RESOURCES
+        value: false
+      - name: YAKS_KNATIVE_AUTO_REMOVE_RESOURCES
+        value: false
+      - name: YAKS_CAMELK_SUPPORT_VARIABLES_IN_SOURCES
+        value: false
+    resources:
+      - MarketSourceMock.java
+      - ../Predictor.java
+      - ../SillyInvestor.java
+      - ../CautiousInvestorAdapterSink.java
+      - ../CautiousInvestorService.java
