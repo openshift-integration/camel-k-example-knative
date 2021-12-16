@@ -31,8 +31,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      YAKS_IMAGE_NAME: "docker.io/yaks/yaks"
-      YAKS_IMAGE_VERSION: "0.6.0-202109280800"
+      YAKS_IMAGE_NAME: "docker.io/citrusframework/yaks"
+      YAKS_VERSION: "0.7.0"
       YAKS_RUN_OPTIONS: "--timeout=15m"
       KUBECTL_WAIT_TIMEOUT: "180s"
     steps:
@@ -122,9 +122,11 @@ jobs:
           kamel install
       - name: YAKS tools
         uses: citrusframework/yaks-install-action@v1.0
+        with:
+          version: v${{ env.YAKS_VERSION }}
       - name: Install YAKS
         run: |
-          yaks install --operator-image $YAKS_IMAGE_NAME:$YAKS_IMAGE_VERSION
+          yaks install --operator-image $YAKS_IMAGE_NAME:$YAKS_VERSION
       - name: YAKS Tests
         run: |
-          yaks run test/trading-system.feature $YAKS_RUN_OPTIONS
+          yaks run test $YAKS_RUN_OPTIONS
