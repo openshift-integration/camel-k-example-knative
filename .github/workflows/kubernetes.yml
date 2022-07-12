@@ -33,7 +33,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      CAMEL_K_VERSION: 1.8.2
+      CAMEL_K_VERSION: latest
       YAKS_IMAGE_NAME: "docker.io/citrusframework/yaks"
       YAKS_VERSION: "0.10.0"
       YAKS_RUN_OPTIONS: "--timeout=15m"
@@ -116,7 +116,7 @@ jobs:
       - name: Camel K Tools
         uses: container-tools/camel-k-action@v1
         with:
-          version: v${{ env.CAMEL_K_VERSION }}
+          version: ${{ env.CAMEL_K_VERSION }}
       - name: Install Camel K
         run: |
           # Configure install options
