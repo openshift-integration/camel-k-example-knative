@@ -22,17 +22,20 @@ on:
     branches:
       - main
       - 1.6.x
+      - 1.8.x
   push:
     branches:
       - main
       - 1.6.x
+      - 1.8.x
 
 jobs:
   test:
     runs-on: ubuntu-latest
     env:
+      CAMEL_K_VERSION: latest
       YAKS_IMAGE_NAME: "docker.io/citrusframework/yaks"
-      YAKS_VERSION: "0.7.0"
+      YAKS_VERSION: "0.10.0"
       YAKS_RUN_OPTIONS: "--timeout=15m"
       KUBECTL_WAIT_TIMEOUT: "180s"
     steps:
@@ -112,6 +115,8 @@ jobs:
           kubectl wait --for=condition=Ready pod --all -n knative-eventing --timeout=$KUBECTL_WAIT_TIMEOUT
       - name: Camel K Tools
         uses: container-tools/camel-k-action@v1
+        with:
+          version: ${{ env.CAMEL_K_VERSION }}
       - name: Install Camel K
         run: |
           # Configure install options
@@ -130,3 +135,12 @@ jobs:
       - name: YAKS Tests
         run: |
           yaks run test $YAKS_RUN_OPTIONS
+      - name: YAKS Report
+        if: failure()
+        run: |
+          yaks report
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: dumps
+          path: _output/*-dump.log

@@ -13,3 +13,12 @@ config:
       - ../SillyInvestor.java
       - ../CautiousInvestorAdapterSink.java
       - ../CautiousInvestorService.java
+  dump:
+    enabled: true
+    failedOnly: true
+    includes:
+      - app=camel-k
+post:
+  - name: print dump
+    if: env:CI=true && failure()
+    run: kamel dump
