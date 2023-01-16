@@ -6,15 +6,16 @@ public class CautiousInvestorService extends RouteBuilder {
   @Override
   public void configure() throws Exception {
 
-      rest().post("/{currency}")
-        .route()
-        .log("Asking the internal department to BUY ${header.currency}...")
-        .setBody(constant(""));
+      rest().post("/{currency}").to("direct:post");
+      rest().delete("/{currency}").to("direct:delete");
 
-      rest().delete("/{currency}")
-        .route()
-        .log("Asking the internal department to SELL ${header.currency}...")
-        .setBody(constant(""));
+      from("direct:post")
+          .log("Asking the internal department to BUY ${header.currency}...")
+          .setBody(constant(""));
+
+      from("direct:delete")
+          .log("Asking the internal department to SELL ${header.currency}...")
+          .setBody(constant(""));
 
   }
 }
