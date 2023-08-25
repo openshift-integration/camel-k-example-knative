@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-name: kubernetes
+name: Kubernetes
 
 on:
   pull_request:
@@ -23,24 +23,28 @@ on:
       - main
       - 1.6.x
       - 1.8.x
+      - 1.10.x
   push:
     branches:
       - main
       - 1.6.x
       - 1.8.x
+      - 1.10.x
 
 jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      CAMEL_K_VERSION: 1.8.2
+      CAMEL_K_VERSION: 1.10.4
+      YAKS_VERSION: 0.15.1
       YAKS_IMAGE_NAME: "docker.io/citrusframework/yaks"
-      YAKS_VERSION: "0.10.0"
       YAKS_RUN_OPTIONS: "--timeout=15m"
-      KUBECTL_WAIT_TIMEOUT: "180s"
+      KNATIVE_SERVING_VERSION: v1.9.4
+      KNATIVE_EVENTING_VERSION: v1.9.7
+      KNATIVE_KOURIER_VERSION: v1.9.2
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cleanup
         run: |
           ls -lart
@@ -59,15 +63,19 @@ jobs:
 
           echo "Final status:"
           df -h
-      - name: Set up JDK 11
-        uses: AdoptOpenJDK/install-jdk@v1
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
-          version: "11"
+          java-version: '11'
+          distribution: 'temurin'
       - name: Kind Cluster
-        uses: container-tools/kind-action@v1
+        uses: container-tools/kind-action@v2.0.1
         with:
-          version: v0.11.0
-          node_image: kindest/node:v1.21.1@sha256:fae9a58f17f18f06aeac9772ca8b5ac680ebbed985e266f711d936e91d113bad
+          version: v0.17.0
+          node_image: kindest/node:v1.28.0@sha256:9f3ff58f19dcf1a0611d11e8ac989fdb30a28f40f236f59f0bea31fb956ccf5c
+          knative_serving: ${{ env.KNATIVE_SERVING_VERSION }}
+          knative_eventing: ${{ env.KNATIVE_EVENTING_VERSION }}
+          knative_kourier: ${{ env.KNATIVE_KOURIER_VERSION }}
       - name: Info
         run: |
           kubectl version
@@ -75,46 +83,9 @@ jobs:
           kubectl describe nodes
       - name: Install Knative
         run: |
-          # Prerequisites
-          sudo wget https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
-
-          export SERVING_VERSION=v0.23.1
-          export EVENTING_VERSION=v0.23.2
-          export KOURIER_VERSION=v0.23.0
-
-          # Serving
-          kubectl apply --filename https://github.com/knative/serving/releases/download/$SERVING_VERSION/serving-crds.yaml
-          curl -L -s https://github.com/knative/serving/releases/download/$SERVING_VERSION/serving-core.yaml | head -n -1 | yq e 'del(.spec.template.spec.containers[].resources)' - | kubectl apply -f -
-
-          # Kourier
-          kubectl apply --filename https://github.com/knative/net-kourier/releases/download/$KOURIER_VERSION/kourier.yaml
-          kubectl patch configmap/config-network \
-          --namespace knative-serving \
-          --type merge \
-          --patch '{"data":{"ingress.class":"kourier.ingress.networking.knative.dev"}}'
-
-          # Eventing
-          kubectl apply --filename https://github.com/knative/eventing/releases/download/$EVENTING_VERSION/eventing-crds.yaml
-          curl -L -s https://github.com/knative/eventing/releases/download/$EVENTING_VERSION/eventing-core.yaml | head -n -1 | yq e 'del(.spec.template.spec.containers[].resources)' - | kubectl apply -f -
-
-          # Eventing channels
-          curl -L -s https://github.com/knative/eventing/releases/download/$EVENTING_VERSION/in-memory-channel.yaml | head -n -1 | yq e 'del(.spec.template.spec.containers[].resources)' - | kubectl apply -f -
-
-          # Eventing broker
-          curl -L -s https://github.com/knative/eventing/releases/download/$EVENTING_VERSION/mt-channel-broker.yaml | head -n -1 | yq e 'del(.spec.template.spec.containers[].resources)' - | kubectl apply -f -
-
-          # Eventing sugar controller for injection
-          kubectl apply -f https://github.com/knative/eventing/releases/download/$EVENTING_VERSION/eventing-sugar-controller.yaml
-
-          # Wait for installation completed
-          echo "Waiting for all pods to be ready in kourier-system"
-          kubectl wait --for=condition=Ready pod --all -n kourier-system --timeout=$KUBECTL_WAIT_TIMEOUT
-          echo "Waiting for all pods to be ready in knative-serving"
-          kubectl wait --for=condition=Ready pod --all -n knative-serving --timeout=$KUBECTL_WAIT_TIMEOUT
-          echo "Waiting for all pods to be ready in knative-eventing"
-          kubectl wait --for=condition=Ready pod --all -n knative-eventing --timeout=$KUBECTL_WAIT_TIMEOUT
+          kubectl apply -f https://github.com/knative/serving/releases/download/knative-${{ env.KNATIVE_SERVING_VERSION }}/serving-default-domain.yaml
       - name: Camel K Tools
-        uses: container-tools/camel-k-action@v1
+        uses: container-tools/camel-k-action@v1.0.3
         with:
           version: v${{ env.CAMEL_K_VERSION }}
       - name: Install Camel K
@@ -126,7 +97,7 @@ jobs:
 
           kamel install
       - name: YAKS tools
-        uses: citrusframework/yaks-install-action@v1.0
+        uses: citrusframework/yaks-install-action@v1.1
         with:
           version: v${{ env.YAKS_VERSION }}
       - name: Install YAKS
@@ -134,7 +105,7 @@ jobs:
           yaks install --operator-image $YAKS_IMAGE_NAME:$YAKS_VERSION
       - name: YAKS Tests
         run: |
-          yaks run test $YAKS_RUN_OPTIONS
+          yaks run test/trading-system.feature $YAKS_RUN_OPTIONS
       - name: YAKS Report
         if: failure()
         run: |
