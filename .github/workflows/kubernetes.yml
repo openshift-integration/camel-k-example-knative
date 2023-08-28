@@ -42,6 +42,7 @@ jobs:
       KNATIVE_SERVING_VERSION: v1.9.4
       KNATIVE_EVENTING_VERSION: v1.9.7
       KNATIVE_KOURIER_VERSION: v1.9.2
+      KUBECTL_WAIT_TIMEOUT: "180s"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -96,6 +97,9 @@ jobs:
           export KAMEL_INSTALL_REGISTRY_INSECURE=true
 
           kamel install
+          
+          # Wait for operator to start
+          kubectl wait pod -l app=camel-k --for condition=Ready --timeout=${{ env.KUBECTL_WAIT_TIMEOUT }}
       - name: YAKS tools
         uses: citrusframework/yaks-install-action@v1.1
         with:
@@ -103,6 +107,9 @@ jobs:
       - name: Install YAKS
         run: |
           yaks install --operator-image $YAKS_IMAGE_NAME:$YAKS_VERSION
+          
+          # Wait for operator to start
+          kubectl wait pod -l app=yaks --for condition=Ready --timeout=${{ env.KUBECTL_WAIT_TIMEOUT }}
       - name: YAKS Tests
         run: |
           # Then run integration tests
